@@ -17,7 +17,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 // 📌 글 등록
-app.post("/submitPost", async (req, res) => {
+app.post("/api/submitPost", async (req, res) => {
   const { title, content } = req.body;
   if (!title || !content) return res.status(400).json({ error: "입력 누락" });
 
@@ -35,7 +35,7 @@ app.post("/submitPost", async (req, res) => {
 });
 
 // 📌 전체 글 목록
-app.get("/posts", async (req, res) => {
+app.get("/api/posts", async (req, res) => {
   try {
     const snapshot = await db.collection("posts").orderBy("timestamp", "desc").get();
     const posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -47,7 +47,7 @@ app.get("/posts", async (req, res) => {
 });
 
 // 📌 특정 글 상세 조회
-app.get("/post/:id", async (req, res) => {
+app.get("/api/post/:id", async (req, res) => {
   try {
     const doc = await db.collection("posts").doc(req.params.id).get();
     if (!doc.exists) return res.status(404).json({ error: "글 없음" });
@@ -59,7 +59,7 @@ app.get("/post/:id", async (req, res) => {
 });
 
 // 💬 댓글 목록 조회
-app.get("/post/:id/comments", async (req, res) => {
+app.get("/api/post/:id/comments", async (req, res) => {
   try {
     const snapshot = await db.collection("posts").doc(req.params.id).collection("comments").orderBy("timestamp").get();
     const comments = snapshot.docs.map(doc => doc.data());
@@ -71,7 +71,7 @@ app.get("/post/:id/comments", async (req, res) => {
 });
 
 // 💬 댓글 등록
-app.post("/post/:id/comment", async (req, res) => {
+app.post("/api/post/:id/comment", async (req, res) => {
   const text = req.body.text;
   if (!text) return res.status(400).json({ error: "댓글 내용 없음" });
 
