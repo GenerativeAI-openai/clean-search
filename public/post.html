@@ -100,7 +100,7 @@
     }
 
     async function loadPost() {
-      const res = await fetch(`https://cleansearch-backend.onrender.com/post/${postId}`);
+      const res = await fetch(`https://clean-search.vercel.app/post/${postId}`);
       if (!res.ok) {
         document.getElementById('postTitle').innerText = '❌ 게시글을 불러올 수 없습니다';
         return;
@@ -111,7 +111,7 @@
     }
 
     async function loadComments() {
-      const res = await fetch(`https://cleansearch-backend.onrender.com/post/${postId}/comments`);
+      const res = await fetch(`https://clean-search.vercel.app/post/${postId}/comments`);
       const comments = await res.json();
       const commentBox = document.getElementById('comments');
       commentBox.innerHTML = '';
@@ -128,7 +128,7 @@
       const text = input.value.trim();
       if (!text) return;
 
-      await fetch(`https://cleansearch-backend.onrender.com/post/${postId}/comment`, {
+      await fetch(`https://clean-search.vercel.app/post/${postId}/comment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text })
