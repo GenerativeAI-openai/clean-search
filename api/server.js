@@ -87,13 +87,10 @@ app.post("/post/:id/comment", async (req, res) => {
   }
 });
 
-// ✅ 서버 상태 확인
+// 🩺 상태 확인용 (선택 사항)
 app.get("/", (req, res) => {
-  res.send("✅ 클린서치 Render 서버 작동 중");
+  res.send("✅ 클린서치 Vercel 서버 작동 중");
 });
 
-// 🚀 서버 실행
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 서버가 ${PORT}번 포트에서 실행 중`);
-});
+// ✅ Vercel용 export (포트 listen 대신)
+module.exports = app;
