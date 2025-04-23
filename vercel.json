@@ -13,15 +13,15 @@
     },
     {
       "src": "/",
-      "dest": "public/index.html"
+      "dest": "/index.html"
     },
     {
       "src": "/write",
-      "dest": "public/write.html"
+      "dest": "/write.html"
     },
     {
       "src": "/post",
-      "dest": "public/post.html"
+      "dest": "/post.html"
     },
     {
       "src": "/(.*)",
