@@ -1,5 +1,5 @@
 {
-  "name": "cleansrch-vercel",
+  "name": "cleansearch-vercel",
   "version": "1.0.0",
   "main": "api/server.js",
   "scripts": {
