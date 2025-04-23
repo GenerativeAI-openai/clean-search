@@ -8,23 +8,23 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",  // api 경로 요청은 server.js로
+      "src": "/api/(.*)",
       "dest": "api/server.js"
     },
     {
-      "src": "/",           // 루트 요청은 index.html로
+      "src": "/",
       "dest": "/public/index.html"
     },
     {
-      "src": "/write",      // /write 요청은 write.html로
+      "src": "/write",
       "dest": "/public/write.html"
     },
     {
-      "src": "/post",       // /post 요청은 post.html로
+      "src": "/post",
       "dest": "/public/post.html"
     },
     {
-      "src": "/(.*)",       // 나머지 정적 파일 요청은 public 폴더에서 처리
+      "src": "/(.*)",
       "dest": "/public/$1"
     }
   ]
