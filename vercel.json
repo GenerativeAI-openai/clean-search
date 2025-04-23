@@ -8,11 +8,11 @@
   ],
   "routes": [
     {
-      "src": "^/(submitPost|posts|post(?:/[^/]+)?(?:/comment)?)$",
+      "src": "/(submitPost|posts|post/[^/]+|post/[^/]+/comment)",
       "dest": "api/server.js"
     },
     {
-      "src": "/main",
+      "src": "/",
       "dest": "/index.html"
     },
     {
