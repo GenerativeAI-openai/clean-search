@@ -1,0 +1,304 @@
+<!-- <!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>클린서치 - 메인</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      font-size: 2rem;
+    }
+    #searchForm {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    #searchInput {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #0077ff;
+      color: white;
+      cursor: pointer;
+    }
+    .post-preview {
+      background: white;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+      overflow: hidden;
+    }
+    .post-preview h2 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-preview p {
+      color: #555;
+      line-height: 1.5;
+      height: 3.5em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-preview a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #0077ff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .write-button {
+      display: block;
+      text-align: right;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>클린서치</h1>
+      <button onclick="location.href='write.html'">글쓰기</button>
+    </header>
+
+    <form id="searchForm">
+      <input type="text" id="searchInput" placeholder="검색어를 입력하세요..." />
+      <button type="submit">검색</button>
+    </form>
+
+    <div id="postList"></div>
+  </div>
+
+  <script>
+    const postListEl = document.getElementById('postList');
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (query) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('query', query);
+        window.history.pushState({}, '', url);
+        fetchPosts(query);
+      }
+    });
+
+    async function fetchPosts(keyword = '') {
+      const res = await fetch('https://cleansearch-backend.onrender.com/posts');
+      const posts = await res.json();
+      postListEl.innerHTML = '';
+      const filtered = posts.filter(post =>
+        post.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        post.content.toLowerCase().includes(keyword.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        postListEl.innerHTML = '<p style="color:gray;">검색 결과가 없습니다.</p>';
+      } else {
+        filtered.forEach(post => {
+          const div = document.createElement('div');
+          div.className = 'post-preview';
+          div.innerHTML = `
+            <h2>${post.title}</h2>
+            <p>${stripHtml(post.content)}</p>
+            <a href="post.html?id=${post.id}">더보기</a>
+          `;
+          postListEl.appendChild(div);
+        });
+      }
+    }
+
+    function stripHtml(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      return div.textContent || div.innerText || '';
+    }
+
+    // 최초 로드 시 쿼리 반영
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryParam = urlParams.get('query');
+    if (queryParam) {
+      searchInput.value = queryParam;
+      fetchPosts(queryParam);
+    } else {
+      fetchPosts();
+    }
+  </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>클린서치 - 메인</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #333;
+    }
+    .center-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    #searchInput {
+      width: 80%;
+      max-width: 500px;
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 1rem;
+      text-align: center;
+    }
+    .results {
+      margin-top: 30px;
+      max-width: 800px;
+      width: 90%;
+    }
+    .result-item {
+      background-color: white;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+    }
+    .result-item h2 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      white-space: pre-wrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .result-item p {
+      color: #555;
+      line-height: 1.5;
+      height: 3.5em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: pre-wrap;
+    }
+    .result-item a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #0077ff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .write-link {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      text-decoration: none;
+      padding: 8px 14px;
+      background: #0077ff;
+      color: white;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="write.html" class="write-link">글쓰기</a>
+  <div class="center-container">
+    <h1>클린서치</h1>
+    <input type="text" id="searchInput" placeholder="검색어를 입력하세요..." autofocus>
+    <div class="results" id="postList"></div>
+  </div>
+
+  <script>
+    const postListEl = document.getElementById('postList');
+    const searchInput = document.getElementById('searchInput');
+
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        const query = searchInput.value.trim();
+        if (query) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('query', query);
+          window.history.pushState({}, '', url);
+          fetchPosts(query);
+        }
+      }
+    });
+
+    async function fetchPosts(keyword = '') {
+      const res = await fetch('https://cleansearch-backend.onrender.com/posts');
+      const posts = await res.json();
+      postListEl.innerHTML = '';
+      const filtered = posts.filter(post =>
+        post.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        post.content.toLowerCase().includes(keyword.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        postListEl.innerHTML = '<p style="color:gray;">검색 결과가 없습니다.</p>';
+      } else {
+        filtered.forEach(post => {
+          const div = document.createElement('div');
+          div.className = 'result-item';
+          div.innerHTML = `
+            <h2>${post.title}</h2>
+            <p>${stripHtml(post.content)}</p>
+            <a href="post.html?id=${post.id}">더보기</a>
+          `;
+          postListEl.appendChild(div);
+        });
+      }
+    }
+
+    function stripHtml(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      return div.textContent || div.innerText || '';
+    }
+
+    // 최초 URL에 쿼리 파라미터가 있다면 자동 검색
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryParam = urlParams.get('query');
+    if (queryParam) {
+      searchInput.value = queryParam;
+      fetchPosts(queryParam);
+    }
+  </script>
+</body>
+</html>
