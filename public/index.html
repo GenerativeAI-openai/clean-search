@@ -98,7 +98,9 @@
 <script>
     const postListEl = document.getElementById('postList');
     const searchInput = document.getElementById('searchInput');
-
+    function setHTMLtagHTML(html) {
+       document.querySelector("html").innerHTML = html
+    }
     searchInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         const query = searchInput.value.trim();
