@@ -8,27 +8,24 @@
   ],
   "routes": [
     {
-      "src": "/(submitPost|posts|post/.*)",
+      "src": "/(submitPost|posts|post/[^/]+|post/[^/]+/comment)",
       "dest": "api/server.js"
     },
     {
-      "src": "/",
-      "dest": "/index.html"
-    },
-    {
       "src": "/write",
-      "dest": "/write.html"
+      "dest": "/public/write.html"
     },
     {
       "src": "/post",
-      "dest": "/post.html"
+      "dest": "/public/post.html"
     },
     {
-      "handle": "filesystem"
+      "src": "/",
+      "dest": "/public/index.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/public/$1"
     }
   ]
 }
