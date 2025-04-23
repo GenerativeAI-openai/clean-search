@@ -105,7 +105,7 @@
     });
 
     async function fetchPosts(keyword = '') {
-      const res = await fetch('https://clean-search.vercel.app/posts');
+      const res = await fetch('https://clean-search.vercel.app/api/posts');
       const posts = await res.json();
       postListEl.innerHTML = '';
       const filtered = posts.filter(post =>
