@@ -12,7 +12,7 @@
       "dest": "api/server.js"
     },
     {
-      "src": "https://clean-search.vercel.app/",
+      "src": "clean-search.vercel.app",
       "dest": "/index.html"
     },
     {
