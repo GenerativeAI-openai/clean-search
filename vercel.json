@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/(submitPost|posts|post/[^/]+|post/[^/]+/comment)",
-      "dest": "api/server.js"
+      "dest": "server.js"
     },
     {
       "src": "/",
