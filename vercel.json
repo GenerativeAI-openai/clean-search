@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",  // api 경로 요청은 server.js로
+      "dest": "api/server.js"
+    },
+    {
+      "src": "/",           // 루트 요청은 index.html로
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",       // 나머지 정적 파일 요청은 public 폴더에서 처리
+      "dest": "/public/$1"
+    }
+  ]
+}
