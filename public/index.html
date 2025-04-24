@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-
 <html lang="ko">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>클린서치 - 메인</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>클린서치 - 메인</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body, html {
       height: 100%;
@@ -80,86 +79,16 @@
       font-size: 0.95rem;
     }
   </style>
-<style>
-.page { display: none; }
-.page.active { display: block; }
-</style></head>
-<body><nav>
-<button onclick="showPage('home')">홈</button>
-<button onclick="showPage('write')">글쓰기</button>
-<button onclick="showPage('post')">게시글</button>
-</nav>
-<a class="write-link" href="/write">글쓰기</a>
-<div class="center-container">
-<h1>클린서치</h1>
-<input autofocus="" id="searchInput" placeholder="검색어를 입력하세요" type="text"/>
-<div class="results" id="postList"></div>
-</div>
-<script>
-    const postListEl = document.getElementById('postList');
-    const searchInput = document.getElementById('searchInput');
-    function setHTMLtagHTML(html) {
-       document.querySelector("html").innerHTML = html
-    }
-    searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        const query = searchInput.value.trim();
-        if (query) {
-          const url = new URL(window.location.href);
-          url.searchParams.set('query', query);
-          window.history.pushState({}, '', url);
-          fetchPosts(query);
-        }
-      }
-    });
+</head>
+<body>
+  <a href="/write" class="write-link">글쓰기</a>
+  <div class="center-container">
+    <h1>클린서치</h1>
+    <input type="text" id="searchInput" placeholder="검색어를 입력하세요" autofocus>
+    <div class="results" id="postList"></div>
+  </div>
 
-    async function fetchPosts(keyword = '') {
-      const res = await fetch('https://clean-search.vercel.app/api/posts');
-      const posts = await res.json();
-      postListEl.innerHTML = '';
-      const filtered = posts.filter(post =>
-        post.title.toLowerCase().includes(keyword.toLowerCase()) ||
-        post.content.toLowerCase().includes(keyword.toLowerCase())
-      );
-
-      if (filtered.length === 0) {
-        postListEl.innerHTML = '<p style="color:gray;">검색 결과가 없습니다.</p>';
-      } else {
-        filtered.forEach(post => {
-          const div = document.createElement('div');
-          div.className = 'result-item';
-          div.innerHTML = `
-            <h2>${post.title}</h2>
-            <p>${stripHtml(post.content)}</p>
-            <a href="post?id=${post.id}">더보기</a>
-          `;
-          postListEl.appendChild(div);
-        });
-      }
-    }
-
-    function stripHtml(html) {
-      const div = document.createElement('div');
-      div.innerHTML = html;
-      return div.textContent || div.innerText || '';
-    }
-
-    // 최초 URL에 쿼리 파라미터가 있다면 자동 검색
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryParam = urlParams.get('query');
-    if (queryParam) {
-      searchInput.value = queryParam;
-      fetchPosts(queryParam);
-    }
-  </script>
-<div class="page active" id="home">
-<a class="write-link" href="/write">글쓰기</a>
-<div class="center-container">
-<h1>클린서치</h1>
-<input autofocus="" id="searchInput" placeholder="검색어를 입력하세요" type="text"/>
-<div class="results" id="postList"></div>
-</div>
-<script>
+  <script>
     const postListEl = document.getElementById('postList');
     const searchInput = document.getElementById('searchInput');
 
@@ -214,184 +143,5 @@
       fetchPosts(queryParam);
     }
   </script>
-</div><div class="page" id="write">
-<div class="container">
-<a class="back-btn" href="index.html">← 돌아가기</a>
-<h1>글쓰기</h1>
-<input id="title" placeholder="제목을 입력하세요" type="text"/>
-<div class="toolbar">
-<button onclick="execCmd('bold')"><b>굵게</b></button>
-<button onclick="execCmd('underline')"><u>밑줄</u></button>
-<button onclick="execCmd('italic')"><i>기울임</i></button>
-<label>
-        글자 크기:
-        <select onchange="setFontSize(this.value)">
-<option value="">선택</option>
-<option value="14">14px</option>
-<option value="16">16px</option>
-<option value="18">18px</option>
-<option value="20">20px</option>
-<option value="24">24px</option>
-<option value="28">28px</option>
-</select>
-</label>
-<label class="upload-label" for="imgUpload">📷 이미지 업로드</label>
-<input accept="image/*" id="imgUpload" onchange="uploadImage(event)" type="file"/>
-</div>
-<div contenteditable="true" id="editor"></div>
-<button class="submit-btn" onclick="submitPost()">등록</button>
-</div>
-<script>
-    let unsaved = true;
-
-    window.onbeforeunload = function() {
-      if (unsaved) {
-        return '변경사항이 저장되지 않을 수 있습니다.';
-      }
-    };
-
-    function execCmd(cmd) {
-      document.execCommand(cmd, false, null);
-    }
-
-    function setFontSize(size) {
-      if (!size) return;
-      document.execCommand('fontSize', false, '7');
-      const fontElements = document.getElementsByTagName('font');
-      for (let i = 0; i < fontElements.length; i++) {
-        if (fontElements[i].size === '7') {
-          fontElements[i].removeAttribute('size');
-          fontElements[i].style.fontSize = size + 'px';
-        }
-      }
-    }
-
-    function uploadImage(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.className = 'resizable';
-        img.style.maxWidth = '100%';
-        img.style.marginTop = '10px';
-        document.getElementById('editor').appendChild(img);
-        unsaved = true;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function submitPost() {
-      const title = document.getElementById('title').value.trim();
-      const content = document.getElementById('editor').innerHTML.trim();
-
-      if (!title || !content) {
-        alert('제목과 내용을 모두 입력하세요.');
-        return;
-      }
-
-      fetch('https://clean-search.vercel.app/api/submitPost', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ title, content })
-      })
-      .then(res => {
-        if (!res.ok) throw new Error('서버 응답 실패');
-        return res.json();
-      })
-      .then(data => {
-        alert('✅ 글이 저장되었습니다.');
-        unsaved = false;
-        window.location.href = 'index.html';
-      })
-      .catch(err => {
-        console.error(err);
-        alert('❌ 저장에 실패했습니다.');
-      });
-    }
-  </script>
-</div><div class="page" id="post">
-<div class="container">
-<a class="back-btn" href="index.html">← 돌아가기</a>
-<h1 id="postTitle">제목 로딩 중...</h1>
-<div class="content" id="postContent">내용을 불러오는 중입니다...</div>
-<div class="comment-section">
-<h3>댓글</h3>
-<div id="comments"></div>
-<div class="comment-input">
-<input id="commentInput" placeholder="댓글을 입력하세요..." type="text"/>
-<button onclick="submitComment()">등록</button>
-</div>
-</div>
-</div>
-<script>
-    const urlParams = new URLSearchParams(location.search);
-    const postId = urlParams.get('id');
-
-    if (!postId) {
-      document.getElementById('postTitle').innerText = '❌ 유효하지 않은 접근입니다';
-      document.getElementById('postContent').innerText = '게시글 ID가 제공되지 않았습니다.';
-      throw new Error('Post ID is undefined');
-    }
-
-    async function loadPost() {
-      const res = await fetch(`https://clean-search.vercel.app/api/post/${postId}`);
-      if (!res.ok) {
-        document.getElementById('postTitle').innerText = '❌ 게시글을 불러올 수 없습니다';
-        return;
-      }
-      const post = await res.json();
-      document.getElementById('postTitle').innerText = post.title;
-      document.getElementById('postContent').innerHTML = post.content;
-    }
-
-    async function loadComments() {
-      const res = await fetch(`https://clean-search.vercel.app/api/post/${postId}/comments`);
-      const comments = await res.json();
-      const commentBox = document.getElementById('comments');
-      commentBox.innerHTML = '';
-      comments.forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'comment';
-        div.innerText = c.text;
-        commentBox.appendChild(div);
-      });
-    }
-
-    async function submitComment() {
-      const input = document.getElementById('commentInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      await fetch(`https://clean-search.vercel.app/api/post/${postId}/comment`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      });
-
-      input.value = '';
-      loadComments();
-    }
-
-    loadPost();
-    loadComments();
-  </script>
-</div><script>
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  history.pushState({}, '', `#${id}`);
-}
-window.addEventListener('load', () => {
-  const hash = location.hash.replace('#', '') || 'home';
-  showPage(hash);
-});
-window.addEventListener('popstate', () => {
-  const hash = location.hash.replace('#', '') || 'home';
-  showPage(hash);
-});
-</script></body>
+</body>
 </html>
